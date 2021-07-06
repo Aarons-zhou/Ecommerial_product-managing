@@ -18,10 +18,10 @@ export const reqWeather = data => request('https://restapi.amap.com/v3/weather/w
 export const reqRetrieveCategory = parentId => request(URL_BASE+'/api/category/list/'+parentId)
 
 //添加分类
-export const reqCreateCategory = data => request(URL_BASE+'/manage/category/add',data,'POST')
+export const reqCreateCategory = data => request(URL_BASE+'/api/category/add',data,'POST')
 
 //修改分类
-export const reqUpdateCategory = data => request(URL_BASE+'/manage/category/update',data,'POST')
+export const reqUpdateCategory = data => request(URL_BASE+'/api/category/update',data,'PUT')
 
 //获取商品分页列表
 export const reqProductList = data => request(URL_BASE+'/manage/product/list',data)

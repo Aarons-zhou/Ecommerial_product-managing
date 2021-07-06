@@ -10,22 +10,15 @@ export default class CategoryModal extends PureComponent {
         getCategory: PropTypes.func.isRequired
     }
 
-    state = {
-        parentId: 0,
-    }
-
     //清空信息及关闭模态对话框的回调
     handleCancel = () => {
         this.props.closeModal()
-        // this.formNode.setFieldsValue({
-        //     name:''
-        // })
     }
 
     //提交模态对话框的回调
     handleSubmit = async () => {
         //1.获取数据并验证
-        const { visible } = this.state
+        const { visible } = this.props.props2Modal
         const data = this.formNode.getFieldsValue()
         try {
             await this.formNode.validateFields()
@@ -34,16 +27,10 @@ export default class CategoryModal extends PureComponent {
             return null
         }
 
-        //测试
-        console.log(this.formNode.getFieldsValue())
-        console.log({
-            parentId: data.parentId,
-            categoryName: data.name
-        });
-        console.log({
-            categoryId: data.id,
-            categoryName: data.name
-        });
+        /*
+            测试
+        */
+        console.log(data)
         //2.发送请求
         let result = {}
         if (visible === 1) {
@@ -68,16 +55,33 @@ export default class CategoryModal extends PureComponent {
         }
     }
 
+    componentDidMount() {
+        const { currentCategory: { id, name }, parentId } = this.props.props2Modal
+        this.id = id
+        this.name = name
+        this.parentId = parentId
+    }
     componentDidUpdate() {
-        //设置输入框初始值
-        const { currentCategory: { name }, parentId } = this.props.props2Modal
-        if(this.formNode) this.formNode.setFieldsValue({ name })
-        // this.setState({ parentId })
-        // console.log(this.state.parentId);
+        const { currentCategory: { id, name }, parentId } = this.props.props2Modal
+        this.id = id
+        this.name = name
+        this.parentId = parentId
     }
 
+
+    // componentDidUpdate() {
+    //     //设置输入框初始值
+    //     const { currentCategory: { name }, parentId } = this.props.props2Modal
+    //     if (this.formNode) this.formNode.setFieldsValue({
+    //         name
+    //     })
+    //     // this.setState({ parentId })
+    //     // console.log(this.state.parentId);
+    // }
+
     render() {
-        const { visible, parentId, primaryCategory } = this.props.props2Modal
+        const { visible, primaryCategory } = this.props.props2Modal
+        console.log(this.props.props2Modal,this.name);
         return (
             <Modal
                 title={visible === 1 ? '添加菜单项' : '修改菜单项'}
@@ -87,14 +91,14 @@ export default class CategoryModal extends PureComponent {
             >
                 {visible === 1 ? (
                     <Form ref={c => { this.formNode = c }}>
-                        <Form.Item>
-                            所属分类：
+                        <Form.Item
+                            label='所属分类：'
+                        >
                             <Select
-                                value={this.state.parentId}
+                                value={this.parentId}
                                 onChange={parentId => {
-                                    this.setState({
-                                        parentId
-                                    })
+                                    this.parentId = parentId
+                                    this.forceUpdate()
                                 }}
                             >
                                 <Option value={0}>一级菜单</Option>
@@ -103,13 +107,17 @@ export default class CategoryModal extends PureComponent {
                         </Form.Item>
                         <Form.Item
                             name='name'
-                            // rules={[{ required: true, message: '请输入内容' }]}
+                            label='分类名称：'
+                            initialValue={this.name}
+                        // rules={[{ required: true, message: '请输入内容' }]}
                         >
-                            分类名称：
                             <Input
                                 placeholder='请输入分类名称'
                                 allowClear={true}
                                 onPressEnter={this.handleSubmit}
+                                onChange={(params) => {
+                                    console.log(params);
+                                }}
                             />
                         </Form.Item>
                     </Form>
@@ -117,6 +125,7 @@ export default class CategoryModal extends PureComponent {
                         <Form ref={c => { this.formNode = c }}>
                             <Form.Item
                                 name='name'
+                                initialValue={this.name}
                                 rules={[{ required: true, message: '请输入内容' }]}
                             >
                                 <Input

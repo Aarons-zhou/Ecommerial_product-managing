@@ -11,6 +11,9 @@ export default function request(url, data, method = 'GET') {
         } else if (method === 'POST') {
             result = axios.post(url, data)
         }
+        else if (method === 'PUT') {
+            result = axios.put(url, data)
+        }
         result.then(response => {
             resolve(response.data)
         }).catch(err => {
