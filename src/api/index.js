@@ -24,16 +24,22 @@ export const reqCreateCategory = data => request(URL_BASE+'/api/category/add',da
 export const reqUpdateCategory = data => request(URL_BASE+'/api/category/update',data,'PUT')
 
 //获取商品分页列表
-export const reqProductList = data => request(URL_BASE+'/manage/product/list',data)
+export const reqProductList = data => request(URL_BASE+'/api/products/list',data,'POST')
 
-//根据ID/Name搜索产品分页列表
-export const reqProductSearch = data => request(URL_BASE+'/manage/product/search',data)
+//根据名称搜索产品分页列表
+export const reqProductSearchByName = data => request(URL_BASE+'/api/products/searchByName',data)
+
+//根据描述搜索产品分页列表
+export const reqProductSearchByDesc = data => request(URL_BASE+'/api/products/searchByDesc/'+data.join('/'))
 
 //商品上架下架
-export const reqProductStatusUpdate = data => request(URL_BASE+'/manage/product/updateStatus',data,'POST')
+export const reqProductStatusUpdate = (id,data) => request(URL_BASE+'/api/products/updateStatus/'+id,data,'PUT')
 
-//添加商品
-export const reqProductCreate = data => request(URL_BASE+'/manage/product/add',data,'POST')
+//修改商品
+export const reqProductUpdate = data => request(URL_BASE+'/api/products/updateProduct/'+data.id,data,'PUT')
+
+//新增商品
+export const reqProductCreate = data => request(URL_BASE+'/api/products/addProduct',data,'POST')
 
 //删除图片
 export const reqDeleteImage = data => request(URL_BASE+'/manage/img/delete',data,'POST')

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Switch,Route, Redirect } from 'react-router-dom'
-import ProductHome from './ProductHome'
-import ProductCreate from './ProductCreate'
-import ProductRetrieve from './ProductRetrieve'
+import ProductHome from './product-home'
+import ProductCreate from './product-create'
+import ProductRetrieve from './product-retrieve'
 import './index.less'
 
 export default class Product extends Component {
