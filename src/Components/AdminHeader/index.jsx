@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import LinkButton from '../RenderLinkButton'
 import { logout } from '../../redux/actions'
-import transferTime from '../../utils/transferTime'
+import { transferTime } from '../../utils/transferTime'
 import { reqIP, reqWeather } from '../../api'
 import './index.less'
 
@@ -18,8 +18,8 @@ class AdminHeader extends Component {
     state = {
         isConfirmLogoutVisible: false,
         time: transferTime(new Date()),
-        city : '',
-        temperature : '',
+        city: '',
+        temperature: '',
         weather: ''
     }
 
@@ -59,8 +59,8 @@ class AdminHeader extends Component {
             if (status === '1' && infocode === '10000') {
                 const { province, city, temperature, weather } = lives[0]
                 this.setState({
-                    city:`${province}-${city}`,
-                    temperature:`${temperature}℃`,
+                    city: `${province}-${city}`,
+                    temperature: `${temperature}℃`,
                     weather
                 })
             }
@@ -84,7 +84,7 @@ class AdminHeader extends Component {
                 <div className='admin-header-upper-layer'>
                     <span className='admin-header-upper-layer-wrapper'>
                         <span>Hello, {user.name}</span>
-                        <LinkButton onClick={this.confirmLogout} style={{marginRight:'22px'}}>退出登录</LinkButton>
+                        <LinkButton onClick={this.confirmLogout} style={{ marginRight: '22px' }}>退出登录</LinkButton>
                     </span>
                 </div>
                 <div className='admin-header-lower-layer'>

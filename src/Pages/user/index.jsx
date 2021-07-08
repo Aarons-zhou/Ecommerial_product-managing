@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Card, Table, Button,Modal, message } from 'antd'
+import { Card, Table, Button, Modal, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { reqUserList, reqDeleteUser } from '../../api'
 import LinkButton from '../../Components/RenderLinkButton'
 import UserForm from './UserForm'
-import transferTime from '../../utils/transferTime'
+import { transferTime } from '../../utils/transferTime'
 
 const { confirm } = Modal
 export default class User extends Component {
@@ -34,17 +34,17 @@ export default class User extends Component {
     }
 
     //删除确认
-    showConfirm = (user,callback) => {
+    showConfirm = (user, callback) => {
         confirm({
             title: '确定注销用户吗？',
             icon: <ExclamationCircleOutlined />,
             content: '注销该用户信息后，将永久不可恢复。',
             async onOk() {
-                const result = await reqDeleteUser({userId:user._id})
-                if(result.data.status===0) {
+                const result = await reqDeleteUser({ userId: user._id })
+                if (result.data.status === 0) {
                     message.success('用户删除成功')
                     callback()
-                }else message.error('用户删除失败，请稍后重试')
+                } else message.error('用户删除失败，请稍后重试')
             },
             onCancel() {
             },
@@ -97,7 +97,7 @@ export default class User extends Component {
                             }}>
                                 修改
                             </LinkButton>
-                            <LinkButton onClick={() => {this.showConfirm(user,this.getUserList)}}>删除</LinkButton>
+                            <LinkButton onClick={() => { this.showConfirm(user, this.getUserList) }}>删除</LinkButton>
                         </span>
                     )
                 }

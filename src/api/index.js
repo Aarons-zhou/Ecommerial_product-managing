@@ -45,10 +45,10 @@ export const reqProductCreate = data => request(URL_BASE+'/api/products/addProdu
 export const reqDeleteImage = data => request(URL_BASE+'/manage/img/delete',data,'POST')
 
 //获取角色列表
-export const reqRoleList = data => request(URL_BASE+'/manage/role/list',data)
+export const reqRoleList = data => request(URL_BASE+'/api/role/getRoles',data)
 
 //添加角色
-export const reqAddRole = data => request(URL_BASE+'/manage/role/add',data,'POST')
+export const reqCreateRole = data => request(URL_BASE+'/api/role/createRoleByName',data,'POST')
 
 //设置角色权限
 export const reqUpdateRole = data => request(URL_BASE+'/manage/role/update',data,'POST')

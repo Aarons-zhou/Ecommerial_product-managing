@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Card, Table, Button, Modal, Input, Tree, Form, message } from 'antd'
 import { logout } from '../../redux/actions'
-import { reqRoleList, reqAddRole, reqUpdateRole } from '../../api'
+import { reqRoleList, reqCreateRole, reqUpdateRole } from '../../api'
 import menuList from '../../utils/menuConfig.js'
 import { localStorageUser } from '../../utils/localStorage'
-import transferTime from '../../utils/transferTime'
+import { putServerTime } from '../../utils/transferTime'
 import './index.less'
 
 //定义列信息
@@ -16,20 +16,17 @@ const columns = [
     },
     {
         title: '创建时间',
-        dataIndex: 'create_time',
-        render: transferTime
+        dataIndex: 'createTime',
+        render: putServerTime
     },
     {
         title: '授权时间',
-        dataIndex: 'auth_time',
-        render: auth_time => {
-            if (auth_time) transferTime(auth_time)
-            else return ''
-        }
+        dataIndex: 'authTime',
+        render: putServerTime
     },
     {
         title: '授权人',
-        dataIndex: 'auth_name',
+        dataIndex: 'authName',
     },
 ];
 
@@ -46,7 +43,7 @@ class Role extends Component {
     //发送请求获取角色列表
     getRoleList = async () => {
         const result = await reqRoleList()
-        const { status, data } = result.data
+        const { status, data } = result
         if (status === 0) this.setState({ roleList: data })
         else message.error('获取角色列表失败，请稍后重试')
     }
@@ -54,8 +51,8 @@ class Role extends Component {
     //创建角色成功的回调
     createOk = async () => {
         const roleName = this.inputNode.state.value
-        const result = await reqAddRole({ roleName })
-        if (result.data.status === 0) {
+        const result = await reqCreateRole(roleName)
+        if (result.status === 0) {
             message.success('添加角色成功')
             this.cancelCreate()
             this.getRoleList()
@@ -157,7 +154,7 @@ class Role extends Component {
         return (
             <Card title={title}>
                 <Table
-                    rowKey='_id'
+                    rowKey='id'
                     rowSelection={{
                         type: 'radio',
                         onChange: chosenRole => { this.setState({ chosenRole }) },

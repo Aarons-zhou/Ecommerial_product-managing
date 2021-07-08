@@ -7,12 +7,17 @@ export default function request(url, data, method = 'GET') {
         if (method === 'GET') {
             result = axios.get(url, {
                 params: data,
+                headers: { 'Content-Type': 'application/json' }
             })
         } else if (method === 'POST') {
-            result = axios.post(url, data)
+            result = axios.post(url, data, {
+                headers: { 'Content-Type': 'application/json' }
+            })
         }
         else if (method === 'PUT') {
-            result = axios.put(url, data)
+            result = axios.put(url, data, {
+                headers: { 'Content-Type': 'application/json' }
+            })
         }
         result.then(response => {
             resolve(response.data)
