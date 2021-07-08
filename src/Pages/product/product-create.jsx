@@ -68,7 +68,7 @@ export default class ProductCreate extends Component {
         let result
         if (id) {
             //发送修改商品的请求
-            result = await reqProductUpdate({ id, idStr, name, status, desc, price, pcategoryId, categoryId, detail })
+            result = await reqProductUpdate(id, { idStr, name, status, desc, price, pcategoryId, categoryId, detail })
         } else {
             //发送添加商品的请求
             result = await reqProductCreate({ name, desc, price, pcategoryId, categoryId, detail, status: 0 })
@@ -98,7 +98,7 @@ export default class ProductCreate extends Component {
             })
         }
         this.setState({ options })
-        
+
         //初次获取Casecader的初始值的二级菜单数据
         const { pcategoryId } = this.props.location.state.product
         if (pcategoryId * 1 > 0) {
@@ -204,7 +204,7 @@ export default class ProductCreate extends Component {
                         label='商品图片'
                         {...layout}
                     >
-                        <PictureWall ref={c => this.imgsRef = c} /> 
+                        <PictureWall ref={c => this.imgsRef = c} />
                         *服务器尚未支持图片传输功能，请见谅
                     </Form.Item>
                     <Form.Item

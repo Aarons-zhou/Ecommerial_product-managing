@@ -5,7 +5,7 @@ import { logout } from '../../redux/actions'
 import { reqRoleList, reqCreateRole, reqUpdateRole } from '../../api'
 import menuList from '../../utils/menuConfig.js'
 import { localStorageUser } from '../../utils/localStorage'
-import { putServerTime } from '../../utils/transferTime'
+import { putServerTime, transferTime } from '../../utils/transferTime'
 import './index.less'
 
 //定义列信息
@@ -36,10 +36,9 @@ class Role extends Component {
         chosenRole: [],
         isCreateVisible: false,
         isAuthVisible: false,
-        currentId: '',
-        currentName: '',
-        currentMenus: []
+        currentRole: {},
     }
+    
     //发送请求获取角色列表
     getRoleList = async () => {
         const result = await reqRoleList()
@@ -52,7 +51,8 @@ class Role extends Component {
     createOk = async () => {
         const roleName = this.inputNode.state.value
         const result = await reqCreateRole(roleName)
-        if (result.status === 0) {
+        console.log(result);
+        if (result === 'success') {
             message.success('添加角色成功')
             this.cancelCreate()
             this.getRoleList()
@@ -60,6 +60,7 @@ class Role extends Component {
             message.error('添加角色失败，请稍后再试')
         }
     }
+
     //创建角色取消的回调
     cancelCreate = () => {
         this.setState({ isCreateVisible: false })
@@ -69,34 +70,48 @@ class Role extends Component {
     //获取默认显示信息
     getDefaultInfo = () => {
         const { roleList, chosenRole } = this.state
-        const { _id, name, menus } = roleList.find(item => item._id === chosenRole[0])
-        if (menus.indexOf('home') === -1) {
-            menus.unshift('/home')
+        const { id, name, menus, createTime } = roleList.find(item => item.id === chosenRole[0])
+        const menusArr = menus.split(',')
+        if (menusArr.indexOf('/home') === -1) {
+            menusArr.unshift('/home')
         }
         this.setState({
-            currentId: _id,
-            currentName: name,
-            currentMenus: menus
+            currentRole: {
+                id,
+                name,
+                menusArr,
+                createTime
+            }
         })
     }
+
     //树形图选项更改的回调
-    onCheck = currentMenus => {
-        this.setState({ currentMenus })
+    onCheck = menusArr => {
+        this.setState(state => ({
+            currentRole: {
+                ...state.currentRole,
+                menusArr
+            }
+        }))
     }
+
     //设置权限成功的回调
     AuthOk = async () => {
-        const { currentId, currentMenus } = this.state
         const { user, logout } = this.props
-        const result = await reqUpdateRole({
-            _id: currentId,
-            menus: currentMenus,
-            auth_time: Date.now(),
-            auth_name: user.username
+        const authName = user.name
+        const { id, name, menusArr, createTime } = this.state.currentRole
+        const menus = menusArr.join(',')
+        const result = await reqUpdateRole(id, {
+            name,
+            authName,
+            authTime: transferTime(Date.now()),                         //修正服务器时间
+            createTime: putServerTime(createTime),
+            menus,
+            v: 0
         })
-        if (result.data.status === 0) {
+        if (result === 'success') {
             //判断设置的是否为自我权限
-            const { _id } = user.role
-            if (_id === currentId) {
+            if (id === user.roleId * 1) {
                 message.success('权限更新成功，请重新登陆')
                 logout()
                 localStorageUser.clearUser()
@@ -109,13 +124,12 @@ class Role extends Component {
         }
         else message.error('权限设置失败，请稍后重试')
     }
+
     //设置权限取消的回调
     cancelAuth = () => {
         this.setState({
             isAuthVisible: false,
-            currentId: '',
-            currentName: '',
-            currentMenus: []
+            currentRole: {}
         })
     }
 
@@ -124,7 +138,7 @@ class Role extends Component {
     }
 
     render() {
-        const { roleList, chosenRole, isCreateVisible, isAuthVisible, currentName, currentMenus } = this.state
+        const { roleList, chosenRole, isCreateVisible, isAuthVisible, currentRole: { name, menusArr } } = this.state
         //设置树形列表
         menuList[0].disabled = true
         const treeList = [{
@@ -162,7 +176,7 @@ class Role extends Component {
                     }}
                     onRow={record => {
                         return {
-                            onClick: () => { this.setState({ chosenRole: [record._id] }) },
+                            onClick: () => { this.setState({ chosenRole: [record.id] }) },
                         };
                     }}
                     columns={columns}
@@ -193,14 +207,14 @@ class Role extends Component {
                     >
                         <Input
                             disabled
-                            value={currentName}
+                            value={name}
                         />
                     </Form.Item>
                     <Tree
                         checkable
                         defaultExpandAll
                         selectable={false}
-                        checkedKeys={currentMenus}
+                        checkedKeys={menusArr}
                         onCheck={this.onCheck}
                         treeData={treeList}
                     />
