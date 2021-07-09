@@ -12,14 +12,15 @@ const { SubMenu } = Menu;
 class LeftNav extends Component {
 
     static propTypes = {
-        saveTitle : PropTypes.func.isRequired
+        saveTitle: PropTypes.func.isRequired
     }
 
-    //根据配置生成菜单
+    //根据配置及权限生成菜单
     menuGenerator = (menuConfig) => {
         const { pathname } = this.props.location
+        const { menus } = this.props.user
         return menuConfig.reduce((pre, item) => {
-            if (!item.children) {
+            if (!item.children && menus.indexOf(item.key) !== -1) {
                 //判断生成初次selectedKeys和title
                 if (pathname.indexOf(item.key) === 0) {
                     this.selectedKeys = item.key
@@ -29,8 +30,7 @@ class LeftNav extends Component {
                 pre.push(
                     <Menu.Item key={item.key} icon={item.icon} onClick={this.pathChange(item)}>{item.title}</Menu.Item>
                 )
-                return pre
-            } else {
+            } else if (item.children) {
                 //判断生成初次openKeys
                 const cItem = item.children.find(cItem => {
                     if (pathname.indexOf(cItem.key) !== -1) return true
@@ -45,8 +45,8 @@ class LeftNav extends Component {
                         {this.menuGenerator(item.children)}
                     </SubMenu>
                 )
-                return pre
             }
+            return pre
         }, [])
     }
 
@@ -82,6 +82,6 @@ class LeftNav extends Component {
 }
 
 export default connect(
-    state => ({}),
+    state => ({ user: state.user }),
     { saveTitle }
 )(withRouter(LeftNav))

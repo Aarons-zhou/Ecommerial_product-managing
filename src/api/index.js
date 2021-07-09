@@ -54,13 +54,13 @@ export const reqCreateRole = data => request(URL_BASE + '/api/role/createRoleByN
 export const reqUpdateRole = (id, data) => request(URL_BASE + '/api/role/updateRole/' + id, data, 'PUT')
 
 //获取用户列表
-export const reqUserList = data => request(URL_BASE + '/manage/user/list', data)
+export const reqUserList = data => request(URL_BASE + '/api/user/getUsers', data)
 
 //修改用户信息
-export const reqUpdateUser = data => request(URL_BASE + '/manage/user/update', data, 'POST')
+export const reqUpdateUser = (id, data) => request(URL_BASE + '/api/user/update/' + id, data, 'PUT')
 
 //添加用户信息
-export const reqAddUser = data => request(URL_BASE + '/manage/user/add', data, 'POST')
+export const reqCreateUser = data => request(URL_BASE + '/api/user/add', data, 'POST')
 
 //删除用户信息
-export const reqDeleteUser = data => request(URL_BASE + '/manage/user/delete', data, 'POST')
+export const reqDeleteUser = data => request(URL_BASE + '/api/user/delete/' + data, '', 'DELECT')

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Card, Table, Button, Modal, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
-import { reqUserList, reqDeleteUser } from '../../api'
+import { reqRoleList, reqUserList, reqDeleteUser } from '../../api'
 import LinkButton from '../../Components/RenderLinkButton'
 import UserForm from './UserForm'
-import { transferTime } from '../../utils/transferTime'
+import { putServerTime } from '../../utils/transferTime'
 
 const { confirm } = Modal
 export default class User extends Component {
@@ -15,17 +15,24 @@ export default class User extends Component {
         user: {}
     }
 
-    //发送请求获取用户列表
+    //发送请求获取用户及角色列表
     getUserList = async () => {
-        const result = await reqUserList()
-        const { status, data: { users, roles } } = result.data
-        if (status === 0) {
-            this.setState({ users, roles })
-        }
+        //用户列表
+        const users = await reqUserList()
+        if (users instanceof Array && users.length > 0) {
+            this.setState({
+                users
+            })
+        } else message.error('请求用户列表失败，请稍后重试')
+        //角色列表
+        const result = await reqRoleList()
+        const { status, data } = result
+        if (status === 0) this.setState({ roles: data })
+        else message.error('获取角色列表失败，请稍后重试')
     }
 
     //关闭模态对话框的回调
-    handleCancel = (reload) => {
+    handleCancel = (reload = false) => {
         this.setState({
             visible: false,
             user: {}
@@ -34,19 +41,19 @@ export default class User extends Component {
     }
 
     //删除确认
-    showConfirm = (user, callback) => {
-        confirm({
+    showConfirm = user => {
+        const _this = this
+        const confirmNode = confirm({
             title: '确定注销用户吗？',
             icon: <ExclamationCircleOutlined />,
             content: '注销该用户信息后，将永久不可恢复。',
             async onOk() {
-                const result = await reqDeleteUser({ userId: user._id })
-                if (result.data.status === 0) {
+                const result = await reqDeleteUser(user.id)
+                if (result === 'success') {
                     message.success('用户删除成功')
-                    callback()
+                    _this.getUserList()
                 } else message.error('用户删除失败，请稍后重试')
-            },
-            onCancel() {
+                confirmNode.destroy()
             },
         });
     }
@@ -58,7 +65,7 @@ export default class User extends Component {
         this.columns = [
             {
                 title: '用户名',
-                dataIndex: 'username'
+                dataIndex: 'name'
             },
             {
                 title: '邮箱',
@@ -70,18 +77,16 @@ export default class User extends Component {
             },
             {
                 title: '注册时间',
-                dataIndex: 'create_time',
-                render: transferTime
+                dataIndex: 'createTime',
+                render: putServerTime
             },
             {
                 title: '所属角色',
-                dataIndex: 'role_id',
-                render: role_id => {
+                dataIndex: 'roleId',
+                render: roleId => {
                     const { roles } = this.state
-                    const role = roles.filter(item => role_id === item._id)
-                    if (role.length > 0) {
-                        return role[0].name
-                    }
+                    const role = roles.filter(item => roleId * 1 === item.id)
+                    if (role.length > 0) return role[0].name
                 }
             },
             {
@@ -97,7 +102,7 @@ export default class User extends Component {
                             }}>
                                 修改
                             </LinkButton>
-                            <LinkButton onClick={() => { this.showConfirm(user, this.getUserList) }}>删除</LinkButton>
+                            <LinkButton onClick={() => { this.showConfirm(user) }}>删除</LinkButton>
                         </span>
                     )
                 }
@@ -117,7 +122,7 @@ export default class User extends Component {
                 <Table
                     dataSource={users}
                     columns={this.columns}
-                    rowKey='_id'
+                    rowKey='id'
                 >
                 </Table>
                 <UserForm visible={visible} user={user} roles={roles} handleCancel={this.handleCancel} />

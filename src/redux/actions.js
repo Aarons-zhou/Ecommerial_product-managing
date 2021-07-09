@@ -1,6 +1,6 @@
 import { message } from 'antd'
 import { USER_LOGIN, USER_LOGOUT, SAVE_TITLE } from './action-type'
-import { reqLogin } from '../api'
+import { reqLogin, reqRoleList } from '../api'
 import { localStorageUser } from '../utils/localStorage'
 
 //登录成功的同步action
@@ -8,11 +8,22 @@ const loginSync = user => ({ type: USER_LOGIN, user })
 //登录的异步action
 export const login = (name, password) => {
     return async dispatch => {
-        const result = await reqLogin({ name, password })
-        const { status, data, msg } = result
-        if (status === 0) {
-            localStorageUser.setUser(data)              //保存到localStorage
-            dispatch(loginSync(data))                   //分发action
+        const loginResult = await reqLogin({ name, password })
+        const RoleListResult = await reqRoleList()
+        const { data, msg } = loginResult
+        if (loginResult.status === 0 && RoleListResult.status === 0) {
+            const roleList = RoleListResult.data
+            const { roleId } = data
+            const role = roleList.filter(item => item.id === roleId * 1)
+            const menus =  role[0].menus.split(',')
+            localStorageUser.setUser({
+                ...data,
+                menus
+            })                                          //保存到localStorage
+            dispatch(loginSync({
+                ...data,
+                menus
+            }))                                         //分发action
         } else {
             message.error(msg)
         }

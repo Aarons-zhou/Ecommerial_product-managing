@@ -25,7 +25,6 @@ class LoginAntd extends Component {
         const { username, password } = user
         const { login } = this.props
         login(username, password)
-
     }
     //表单验证失败的回调
     onFinishFailed = data => {

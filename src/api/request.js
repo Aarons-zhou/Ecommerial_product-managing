@@ -19,6 +19,11 @@ export default function request(url, data, method = 'GET') {
                 headers: { 'Content-Type': 'application/json' }
             })
         }
+        else if (method === 'DELECT') {
+            result = axios.delete(url, {
+                headers: { 'Content-Type': 'application/json' }
+            })
+        }
         result.then(response => {
             resolve(response.data)
         }).catch(err => {
