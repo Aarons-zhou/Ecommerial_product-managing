@@ -11,8 +11,8 @@ class App extends Component {
         //彩蛋
         const hiddenContext = `
         恭喜你，发现了本网站的管理员账号信息。
-    账号：admin
-    密码：123456
+    账号：shutiao
+    密码：shutiao
         
         请尽情体(rou)验(lin)本网站吧~
         `

@@ -40,11 +40,15 @@ class LeftNav extends Component {
                     this.openKeys = [item.key]
                 }
                 //生成含有子级的菜单项
-                pre.push(
-                    <SubMenu key={item.key} icon={item.icon} title={item.title}>
-                        {this.menuGenerator(item.children)}
-                    </SubMenu>
-                )
+                const existingCItem = item.children.filter(cItem => menus.indexOf(cItem.key) !== -1)
+                if (existingCItem.length !== 0) {
+                    pre.push(
+                        <SubMenu key={item.key} icon={item.icon} title={item.title}>
+                            {this.menuGenerator(existingCItem)}
+                        </SubMenu>
+                    )
+                }
+
             }
             return pre
         }, [])

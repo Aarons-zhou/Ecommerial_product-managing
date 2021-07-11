@@ -3,7 +3,7 @@ import { Card, Table, Button, Modal, message } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { reqRoleList, reqUserList, reqDeleteUser } from '../../api'
 import LinkButton from '../../Components/RenderLinkButton'
-import UserForm from './UserForm'
+import UserForm from './user-form'
 import { putServerTime } from '../../utils/transferTime'
 
 const { confirm } = Modal
