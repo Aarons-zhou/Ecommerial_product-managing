@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import { login, tempLogin } from '../../redux/actions';
-import './index.less'
+import LinkButton from '../RenderLinkButton'
 
 const layout = {
     labelCol: { span: 5 },
@@ -71,7 +71,7 @@ class LoginAntd extends Component {
                     <Button type="primary" htmlType="submit">
                         登录
                     </Button>
-                    <a href='###'className='tourist-login' onClick={this.touristLogin}>游客访问</a>
+                    <LinkButton style={{marginLeft:'20px'}} onClick={this.touristLogin}>游客访问</LinkButton>
                 </Form.Item>
 
             </Form>

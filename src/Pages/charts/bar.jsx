@@ -1,17 +1,6 @@
-/*
-	整个畅销榜，按月份分 每个月份多个商品集中在一起
-
-
-
-	1.上方 layout 选取月份   ok
-	2.中间 table 显示数据
-	3.下方（大块） bizCharts 可视化
-
-	一个图标是一个arr 一个项是一个obj
-*/
 import React, { Component } from 'react'
 import { Layout, Menu, Table } from 'antd'
-import { Chart, Interval, Tooltip, Axis } from 'bizcharts'
+import { Chart, Interval, Tooltip } from 'bizcharts'
 import './index.less'
 
 const { Header } = Layout
@@ -258,7 +247,7 @@ const columns = [
 	},
 ];
 
-export default class LeftNav extends Component {
+export default class ChartBar extends Component {
 	state = {
 		chartData: [],
 		tableData: []

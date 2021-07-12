@@ -35,7 +35,8 @@ export const tempLogin = () => {
     return dispatch => {
         const time = Date.now()
         const user = {
-            username: '游客' + time
+            name: '游客' + time,
+            menus:['/home','/products','/category','/product','/role','/user','/chart/bar','/chart/line','/chart/pie']
         }
         dispatch(loginSync(user))
     }
@@ -48,6 +49,7 @@ export const logout = () => {
     return dispatch => {
         localStorageUser.clearUser()                    //清空localStorage
         dispatch(logoutSync())                          //分发action
+        dispatch(saveTitle('首页'))
     }
 }
 

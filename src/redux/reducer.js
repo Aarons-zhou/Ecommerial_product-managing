@@ -16,7 +16,7 @@ function user(state = initUser, action) {
 }
 
 //管理title的reducer
-function title(state = '', action) {
+function title(state = '首页', action) {
     switch (action.type) {
         case SAVE_TITLE:
             return action.title
