@@ -78,7 +78,6 @@ class AdminHeader extends Component {
 
     render() {
         const { user, title } = this.props
-        console.log('@',title);
         const { isConfirmLogoutVisible, time, city, temperature, weather } = this.state
         return (
             <div className='admin-header-wrapper'>

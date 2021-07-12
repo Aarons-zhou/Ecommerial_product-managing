@@ -111,7 +111,6 @@ export default class User extends Component {
     }
     render() {
         const { users, roles, visible, user } = this.state
-        //卡片左上角的信息
         const title = (
             <Button type='primary' onClick={() => { this.setState({ visible: true }) }}>
                 创建用户

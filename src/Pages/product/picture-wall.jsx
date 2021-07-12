@@ -59,7 +59,7 @@ export default class PictureWall extends Component {
             </div>
         );
         return (
-            <>
+            <div>
                 <Upload
                     action={`${IMG_BASE}/uploadFile`}
                     name='image'
@@ -79,7 +79,7 @@ export default class PictureWall extends Component {
                 >
                     <img alt="example" style={{ width: '100%' }} src={previewImage} />
                 </Modal>
-            </>
+            </div>
         );
     }
 }

@@ -2,6 +2,7 @@
   "name": "admin-dev-system",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
@@ -49,6 +50,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://159.75.128.32:5000",
-  "homepage": "./"
+  "proxy": "http://159.75.128.32:5000"
 }
