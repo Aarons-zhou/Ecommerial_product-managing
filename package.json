@@ -49,5 +49,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://159.75.128.32:5000"
+  "proxy": "http://159.75.128.32:5000",
+  "homepage": "./"
 }
