@@ -71,7 +71,7 @@ class LoginAntd extends Component {
                     <Button type="primary" htmlType="submit">
                         登录
                     </Button>
-                    <LinkButton style={{marginLeft:'20px'}} onClick={this.touristLogin}>游客访问</LinkButton>
+                    <LinkButton style={{ marginLeft: '20px' }} onClick={this.touristLogin}>游客访问</LinkButton>
                 </Form.Item>
 
             </Form>

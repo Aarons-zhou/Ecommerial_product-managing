@@ -69,11 +69,15 @@ class AdminHeader extends Component {
 
     componentDidMount() {
         //开启定时器，更新时间
-        setInterval(() => {
+        this.timer = setInterval(() => {
             this.getTime()
         }, 1000);
         //获取地区及天气信息
         this.getWeather()
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer)
     }
 
     render() {

@@ -14,7 +14,6 @@
     "craco": "0.0.3",
     "craco-less": "^1.17.1",
     "eslint-loader": "^4.0.2",
-    "proxy": "^1.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
@@ -23,7 +22,6 @@
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
-    "storejs": "^1.1.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -49,6 +47,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://159.75.128.32:5000"
+  }
 }
