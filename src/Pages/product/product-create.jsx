@@ -60,8 +60,7 @@ export default class ProductCreate extends Component {
             categoryId = categoryIds[1] + ""
         }
         //处理imgs数组
-        const images = this.imgsRef.state.fileList
-        console.log(images[0].thumbUrl);
+        // const images = this.imgsRef.state.fileList
         //处理富文本编辑器
         const detail = this.RTERef.state.editorState.toHTML()
         //发送请求
