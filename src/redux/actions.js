@@ -1,5 +1,5 @@
 import { message } from 'antd'
-import { USER_LOGIN, USER_LOGOUT, SAVE_TITLE } from './action-type'
+import { USER_LOGIN, USER_LOGOUT, SAVE_TITLE,SAVE_PRODUCT } from './action-type'
 import { reqLogin, reqRoleList } from '../api'
 import { localStorageUser } from '../utils/localStorage'
 
@@ -53,7 +53,8 @@ export const logout = () => {
     }
 }
 
-//
-
 //保存title的同步action
 export const saveTitle = title => ({ type: SAVE_TITLE, title })
+
+//保存商品信息的同步action
+export const saveProduct = product =>({type:SAVE_PRODUCT, product})

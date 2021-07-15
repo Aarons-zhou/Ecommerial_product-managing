@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { localStorageUser } from '../utils/localStorage'
-import { USER_LOGIN, USER_LOGOUT, SAVE_TITLE } from './action-type'
+import { USER_LOGIN, USER_LOGOUT, SAVE_TITLE, SAVE_PRODUCT } from './action-type'
 
 //管理用户信息的reducer
 const initUser = localStorageUser.getUser()
@@ -24,4 +24,15 @@ function title(state = '首页', action) {
             return state
     }
 }
-export default combineReducers({ user, title })
+
+//管理商品页的二级页面的初始信息
+function product(state = {}, aciton) {
+    switch (aciton.type) {
+        case SAVE_PRODUCT:
+            return aciton.product
+        default:
+            return state
+    }
+}
+
+export default combineReducers({ user, title, product })

@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
 import { Card, Select, Input, Button, Table, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons'
+import { saveProduct } from '../../redux/actions'
 import { reqProductList, reqProductSearchByDesc, reqProductSearchByName, reqProductStatusUpdate } from '../../api'
 import { PAGE_SIZE } from '../../constances'
 import LinkButton from '../../Components/RenderLinkButton'
 
 const { Option } = Select
-export default class ProductHome extends Component {
+class ProductHome extends Component {
     state = {
         loading: false,
         optionValue: 'productName',
@@ -45,6 +48,12 @@ export default class ProductHome extends Component {
                 total
             })
         } else message.error('获取商品列表信息失败，请稍后重试~')
+    }
+
+    //点击跳转二级页面
+    showSecondPage = (type, product = {}) => {
+        this.props.history.push('/product/' + type)
+        this.props.saveProduct(product)
     }
 
     componentDidMount() {
@@ -93,8 +102,8 @@ export default class ProductHome extends Component {
                 width: 240,
                 render: product => (
                     <div>
-                        <LinkButton onClick={() => { this.props.history.push('/product/create', { product }) }}>修改商品信息</LinkButton>
-                        <LinkButton onClick={() => { this.props.history.push('/product/retrieve', { product }) }}>查看详情</LinkButton>
+                        <LinkButton onClick={() => { this.showSecondPage('create', product) }}>修改商品信息</LinkButton>
+                        <LinkButton onClick={() => { this.showSecondPage('retrieve', product) }}>查看详情</LinkButton>
                     </div>
                 )
             },
@@ -144,10 +153,11 @@ export default class ProductHome extends Component {
             </div>
         )
         const extra = (
-            <Button type='primary' onClick={() => { this.props.history.push('/product/create', { product: {} }) }}>
+            <Button type='primary' onClick={() => { this.showSecondPage('create') }}>
                 <PlusOutlined />
-                添加商品
+                    添加商品
             </Button>
+
         )
         return (
             <Card title={title} extra={extra}>
@@ -179,3 +189,7 @@ export default class ProductHome extends Component {
     }
 }
 
+export default connect(
+    state => ({}),
+    { saveProduct }
+)(ProductHome)

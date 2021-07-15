@@ -1,16 +1,21 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Card, List } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { IMG_BASE } from '../../constances'
+import { saveProduct } from '../../redux/actions'
 
 const { Item } = List
-export default class ProductRetrieve extends Component {
+class ProductRetrieve extends Component {
     render() {
-        const { name, status, price, images, detail } = this.props.location.state.product
+        const { name, status, price, images, detail } = this.props.product
         const title = (
             <div>
                 <ArrowLeftOutlined
-                    onClick={this.props.history.goBack}
+                    onClick={() => {
+                        this.props.history.goBack()
+                        this.props.saveProduct({})
+                    }}
                     style={{ margin: '0 15px' }}
                 />
                 <span style={{ userSelect: 'none' }}>商品详情</span>
@@ -29,7 +34,7 @@ export default class ProductRetrieve extends Component {
                         <span className='product-left-title'>
                             商品状态:
                         </span>
-                        <span>{status? '已下架' : '在售'}</span>
+                        <span>{status ? '已下架' : '在售'}</span>
                     </Item>
                     <Item style={{ display: 'block' }}>
                         <span className='product-left-title'>
@@ -58,3 +63,8 @@ export default class ProductRetrieve extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({ product: state.product }),
+    { saveProduct }
+)(ProductRetrieve)

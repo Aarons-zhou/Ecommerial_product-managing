@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Card, Form, Input, Cascader, Button, message } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { reqRetrieveCategory, reqProductUpdate, reqProductCreate } from '../../api'
 import PictureWall from './picture-wall'
 import RichTextEditor from './rich-context-editor';
+import { saveProduct } from '../../redux/actions'
 
 const { TextArea } = Input
 
-export default class ProductCreate extends Component {
+class ProductCreate extends Component {
 
     state = {
         options: [],
@@ -49,7 +51,7 @@ export default class ProductCreate extends Component {
     //表单提交成功的回调
     onFinish = async value => {
         const { name, desc, price, categoryIds } = value
-        const { id, idStr, status } = this.props.location.state.product
+        const { id, idStr, status } = this.props.product
         //处理pcategoryId及categoryId
         let pcategoryId, categoryId
         if (categoryIds.length === 1) {
@@ -99,7 +101,7 @@ export default class ProductCreate extends Component {
         this.setState({ options })
 
         //初次获取Casecader的初始值的二级菜单数据
-        const { pcategoryId } = this.props.location.state.product
+        const { pcategoryId } = this.props.product
         if (pcategoryId * 1 > 0) {
             //给pcategoryId包结构以复用loadData方法
             const wrapper = [{ value: pcategoryId }]
@@ -109,12 +111,15 @@ export default class ProductCreate extends Component {
 
     render() {
         //处理添加商品页面的initialValues
-        const { name, desc, price, categoryId, pcategoryId, detail } = this.props.location.state.product
+        const { name, desc, price, categoryId, pcategoryId, detail } = this.props.product
         //card左上角
         const title = (
             <div>
                 <ArrowLeftOutlined
-                    onClick={this.props.history.goBack}
+                    onClick={() => {
+                        this.props.history.goBack()
+                        this.props.saveProduct({})
+                    }}
                     style={{ margin: '0 15px' }}
                 />
                 <span>{this.props.location.state ? '修改商品' : '添加商品'}</span>
@@ -220,3 +225,8 @@ export default class ProductCreate extends Component {
         )
     }
 }
+
+export default connect(
+    state => ({ product: state.product }),
+    { saveProduct }
+)(ProductCreate)
