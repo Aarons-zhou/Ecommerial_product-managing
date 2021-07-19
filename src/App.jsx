@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
+import React, { Component, lazy, Suspense } from 'react'
 import { connect } from 'react-redux'
 import { Switch, Route } from 'react-router-dom'
+import Loading from './Components/Loading'
 import 'antd/dist/antd.less'
-import Login from './Pages/login'
-import Admin from './Pages/admin'
+
+const Login = lazy(() => import('./Pages/login'))
+const Admin = lazy(() => import('./Pages/admin'))
 
 class App extends Component {
-
-    componentDidMount(){
+    componentDidMount() {
         //彩蛋
         const hiddenContext = `
         恭喜你，发现了本网站的管理员账号信息。
@@ -20,10 +21,12 @@ class App extends Component {
     }
     render() {
         return (
-            <Switch>
-                <Route path='/login' component={Login}></Route>
-                <Route path='/' component={Admin}></Route>
-            </Switch>
+            <Suspense fallback={Loading}>
+                <Switch>
+                    <Route path='/login' component={Login}></Route>
+                    <Route path='/' component={Admin}></Route>
+                </Switch>
+            </Suspense>
         )
     }
 }
