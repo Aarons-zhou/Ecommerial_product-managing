@@ -27,7 +27,7 @@ export default function request(url, data, method = 'GET') {
         result.then(response => {
             resolve(response.data)
         }).catch(err => {
-            message.error('出错了', err)
+            message.error('出错了')
         })
     })
 }

@@ -87,6 +87,12 @@ class ProductCreate extends Component {
         message.error('商品信息有误，请检查' + err)
     }
 
+    //返回的回调
+    backToPrimary = () => {
+        this.props.history.goBack()
+        this.props.saveProduct({})
+    }
+
     async componentDidMount() {
         //初次获取Casecader的一级菜单数据
         const options = await this.getCategory(0)
@@ -116,10 +122,7 @@ class ProductCreate extends Component {
         const title = (
             <div>
                 <ArrowLeftOutlined
-                    onClick={() => {
-                        this.props.history.goBack()
-                        this.props.saveProduct({})
-                    }}
+                    onClick={this.backToPrimary}
                     style={{ margin: '0 15px' }}
                 />
                 <span>{this.props.location.state ? '修改商品' : '添加商品'}</span>

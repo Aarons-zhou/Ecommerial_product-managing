@@ -45,7 +45,7 @@ const menuConfig = [
     },
     {
         key: '/chart',
-        title: '图形图标',
+        title: '图形图表',
         icon: <SlidersOutlined />,
         children: [
             {

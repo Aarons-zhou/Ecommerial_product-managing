@@ -40,17 +40,19 @@ export default class Category extends Component {
     }
     //获取二级菜单信息
     getSecondaryCategory = category => {
-        const { id: parentId, name: parentName } = category
-        this.setState({
-            currentCategory: {
-                id: '',
-                name: '',
-                parentId,
-                parentName,
-                createParentId: parentId,
-                createParentName: parentName
-            },
-        }, this.getCategory)
+        return () => {
+            const { id: parentId, name: parentName } = category
+            this.setState({
+                currentCategory: {
+                    id: '',
+                    name: '',
+                    parentId,
+                    parentName,
+                    createParentId: parentId,
+                    createParentName: parentName
+                },
+            }, this.getCategory)
+        }
     }
     //返回一级菜单
     backToPrimaryCategory = () => {
@@ -80,20 +82,41 @@ export default class Category extends Component {
     }
     //弹出修改模态对话框
     showUpdateModal = category => {
-        const { id, name } = category
+        return () => {
+            const { id, name } = category
+            this.setState(state => {
+                return {
+                    visible: 2,
+                    currentCategory: {
+                        ...state.currentCategory,
+                        id,
+                        name
+                    }
+                }
+            })
+            //初始化输入框内容
+            this.formNode.setFieldsValue({
+                name
+            })
+        }
+    }
+
+    //处理品类select-options的改变回调
+    handlecategoryChange = createParentId => {
+        let createParentName
+        if (createParentId) {
+            createParentName = this.getNameById(createParentId)
+        } else {
+            createParentName = '一级分类'
+        }
         this.setState(state => {
             return {
-                visible: 2,
                 currentCategory: {
                     ...state.currentCategory,
-                    id,
-                    name
+                    createParentId,
+                    createParentName
                 }
             }
-        })
-        //初始化输入框内容
-        this.formNode.setFieldsValue({
-            name: category.name
         })
     }
 
@@ -151,13 +174,15 @@ export default class Category extends Component {
         }
 
         //处理响应
-        if (result.status !== 0) {
-            message.error('服务器开小差啦，请稍后再试~')
-        } else {
+        if (result.status === -1) {
+            message.error('该品类已存在')
+        } else if (result.status === 0) {
             message.success('提交成功')
             this.handleCancel()
             //按需刷新
             if (createParentId === parentId || createParentId === 0) this.getCategory()
+        } else {
+            message.error('服务器开小差啦，请稍后再试~')
         }
     }
 
@@ -176,9 +201,9 @@ export default class Category extends Component {
                 key: 'operation',
                 render: (_, category) => (
                     <div>
-                        <LinkButton onClick={() => { this.showUpdateModal(category) }}>修改菜单名</LinkButton>
+                        <LinkButton onClick={this.showUpdateModal(category)}>修改菜单名</LinkButton>
                         {this.state.currentCategory.parentId !== 0 ? null : (
-                            <LinkButton onClick={() => this.getSecondaryCategory(category)}>查看菜单</LinkButton>
+                            <LinkButton onClick={this.getSecondaryCategory(category)}>查看菜单</LinkButton>
                         )}
                     </div>
                 )
@@ -229,19 +254,10 @@ export default class Category extends Component {
                         <Form ref={c => { this.formNode = c }}>
                             <Form.Item>
                                 所属分类：
+                                {/* select里onChange回调默认接收createParentId，不能写成高阶函数的形式 */}
                                 <Select
                                     value={createParentId}
-                                    onChange={createParentId => {
-                                        this.setState(state => {
-                                            return {
-                                                currentCategory: {
-                                                    ...state.currentCategory,
-                                                    createParentId,
-                                                    createParentName: this.getNameById(createParentId)
-                                                }
-                                            }
-                                        })
-                                    }}
+                                    onChange={createParentId => { this.handlecategoryChange(createParentId) }}
                                 >
                                     <Option value={0}>一级菜单</Option>
                                     {primaryCategory.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}

@@ -4,15 +4,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import { IMG_BASE } from '../../constances'
 import { reqDeleteImage } from '../../api'
 
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-}
-
 export default class PictureWall extends Component {
     state = {
         previewVisible: false,
@@ -21,11 +12,20 @@ export default class PictureWall extends Component {
         fileList: [],
     };
 
+    getBase64 = file => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
     handleCancel = () => this.setState({ previewVisible: false });
 
     handlePreview = async file => {
         if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
+            file.preview = await this.getBase64(file.originFileObj);
         }
 
         this.setState({

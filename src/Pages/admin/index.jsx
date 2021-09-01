@@ -35,7 +35,7 @@ class Admin extends Component {
                         <AdminHeader />
                     </Header>
                     <Content className='main-content'>
-                        <Suspense fallback={Loading}>
+                        <Suspense fallback={<Loading/>}>
                             <Switch>
                                 <Route path='/home' component={Home} />
                                 <Route path='/category' component={Category} />

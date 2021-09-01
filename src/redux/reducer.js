@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux'
-import { localStorageUser } from '../utils/localStorage'
+import { getUser_l, getUser_s } from '../utils/localStorage'
 import { USER_LOGIN, USER_LOGOUT, SAVE_TITLE, SAVE_PRODUCT } from './action-type'
 
 //管理用户信息的reducer
-const initUser = localStorageUser.getUser()
+const initUser = getUser_l() || getUser_s()
 function user(state = initUser, action) {
     switch (action.type) {
         case USER_LOGIN:

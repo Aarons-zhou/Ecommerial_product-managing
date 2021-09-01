@@ -16,7 +16,7 @@ const getTime = dateInstance => {
 }
 
 //接收Date实例,或时间戳,返回标准（自定义）的时间表示
-export const transferTime = time => {
+export const formatTime = time => {
     //接收Date实例
     if (time instanceof Date) {
         return getTime(time)

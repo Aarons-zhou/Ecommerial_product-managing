@@ -52,8 +52,38 @@ class ProductHome extends Component {
 
     //点击跳转二级页面
     showSecondPage = (type, product = {}) => {
-        this.props.history.push('/product/' + type)
-        this.props.saveProduct(product)
+        return () => {
+            this.props.history.push('/product/' + type)
+            this.props.saveProduct(product)
+        }
+    }
+
+    //搜索的回调
+    goSearch = () => {
+        this.setState({
+            pageNum: 1
+        }, () => {
+            this.getProductLists('search')
+        })
+    }
+
+    // 上架下架商品的回调
+    statusChange = async () => {
+        let { id, status } = product
+        status = status ? 0 : 1
+        const result = await reqProductStatusUpdate(id, { status })
+        if (result !== 1) message.error('对商品操作失败，请稍后重试~')
+        else this.getProductLists()
+    }
+
+    //翻页的回调
+    pageChange = event => {
+        this.setState({
+            pageNum: event.current
+        }, () => {
+            //发送请求
+            this.state.inputValue ? this.getProductLists('search') : this.getProductLists()
+        })
     }
 
     componentDidMount() {
@@ -83,13 +113,7 @@ class ProductHome extends Component {
                         <Button
                             style={{ marginRight: 20 }}
                             // 上架下架商品的回调
-                            onClick={async () => {
-                                let { id, status } = product
-                                status = status ? 0 : 1
-                                const result = await reqProductStatusUpdate(id, { status })
-                                if (result !== 1) message.error('对商品操作失败，请稍后重试~')
-                                else this.getProductLists()
-                            }}
+                            onClick={this.statusChange}
                         >
                             {product.status ? '下架' : '上架'}
                         </Button>
@@ -102,8 +126,8 @@ class ProductHome extends Component {
                 width: 240,
                 render: product => (
                     <div>
-                        <LinkButton onClick={() => { this.showSecondPage('create', product) }}>修改商品信息</LinkButton>
-                        <LinkButton onClick={() => { this.showSecondPage('retrieve', product) }}>查看详情</LinkButton>
+                        <LinkButton onClick={this.showSecondPage('create', product)}>修改商品信息</LinkButton>
+                        <LinkButton onClick={this.showSecondPage('retrieve', product)}>查看详情</LinkButton>
                     </div>
                 )
             },
@@ -129,31 +153,19 @@ class ProductHome extends Component {
                     placeholder='关键字'
                     style={{ width: 150, margin: '0 15px' }}
                     onChange={event => { this.setState({ inputValue: event.target.value }) }}
-                    onPressEnter={() => {
-                        this.setState({
-                            pageNum: 1
-                        }, () => {
-                            this.getProductLists('search')
-                        })
-                    }}
+                    onPressEnter={this.goSearch}
                 />
                 <Button
                     type='primary'
                     //搜索商品的回调
-                    onClick={() => {
-                        this.setState({
-                            pageNum: 1
-                        }, () => {
-                            this.getProductLists('search')
-                        })
-                    }}
+                    onClick={this.goSearch}
                 >
                     搜索
                 </Button>
             </div>
         )
         const extra = (
-            <Button type='primary' onClick={() => { this.showSecondPage('create') }}>
+            <Button type='primary' onClick={this.showSecondPage('create')}>
                 <PlusOutlined />
                     添加商品
             </Button>
@@ -175,14 +187,7 @@ class ProductHome extends Component {
                         simple: true
                     }}
                     //翻页的回调
-                    onChange={event => {
-                        this.setState({
-                            pageNum: event.current
-                        }, () => {
-                            //发送请求
-                            this.state.inputValue ? this.getProductLists('search') : this.getProductLists()
-                        })
-                    }}
+                    onChange={event => { this.pageChange(event) }}
                 />
             </Card>
         )

@@ -4,8 +4,8 @@ import { Card, Table, Button, Modal, Input, Tree, Form, message } from 'antd'
 import { logout } from '../../redux/actions'
 import { reqRoleList, reqCreateRole, reqUpdateRole } from '../../api'
 import menuList from '../../utils/menuConfig.js'
-import { localStorageUser } from '../../utils/localStorage'
-import { putServerTime, transferTime } from '../../utils/transferTime'
+import { clearUser_l, clearUser_s } from '../../utils/localStorage'
+import { putServerTime, formatTime } from '../../utils/formatTime'
 import './index.less'
 
 //定义列信息
@@ -38,7 +38,7 @@ class Role extends Component {
         isAuthVisible: false,
         currentRole: {},
     }
-    
+
     //发送请求获取角色列表
     getRoleList = async () => {
         const result = await reqRoleList()
@@ -51,7 +51,6 @@ class Role extends Component {
     createOk = async () => {
         const roleName = this.inputNode.state.value
         const result = await reqCreateRole(roleName)
-        console.log(result);
         if (result === 'success') {
             message.success('添加角色成功')
             this.cancelCreate()
@@ -104,7 +103,7 @@ class Role extends Component {
         const result = await reqUpdateRole(id, {
             name,
             authName,
-            authTime: transferTime(Date.now()),                         //修正服务器时间
+            authTime: formatTime(Date.now()),                         //修正服务器时间
             createTime: putServerTime(createTime),
             menus,
             v: 0
@@ -114,7 +113,8 @@ class Role extends Component {
             if (id === user.roleId * 1) {
                 message.success('权限更新成功，请重新登陆')
                 logout()
-                localStorageUser.clearUser()
+                clearUser_l()
+                clearUser_s()
                 this.props.history.go('/login')
             } else {
                 message.success('权限设置成功')

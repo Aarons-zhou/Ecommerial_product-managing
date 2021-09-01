@@ -7,15 +7,19 @@ import { saveProduct } from '../../redux/actions'
 
 const { Item } = List
 class ProductRetrieve extends Component {
+    
+    //返回的回调
+    backToPrimary = () => {
+        this.props.history.goBack()
+        this.props.saveProduct({})
+    }
+
     render() {
         const { name, status, price, images, detail } = this.props.product
         const title = (
             <div>
                 <ArrowLeftOutlined
-                    onClick={() => {
-                        this.props.history.goBack()
-                        this.props.saveProduct({})
-                    }}
+                    onClick={this.backToPrimary}
                     style={{ margin: '0 15px' }}
                 />
                 <span style={{ userSelect: 'none' }}>商品详情</span>

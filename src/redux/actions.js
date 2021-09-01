@@ -1,7 +1,7 @@
 import { message } from 'antd'
-import { USER_LOGIN, USER_LOGOUT, SAVE_TITLE,SAVE_PRODUCT } from './action-type'
+import { USER_LOGIN, USER_LOGOUT, SAVE_TITLE, SAVE_PRODUCT } from './action-type'
 import { reqLogin, reqRoleList } from '../api'
-import { localStorageUser } from '../utils/localStorage'
+import { setUser_l, setUser_s } from '../utils/localStorage'
 
 //登录成功的同步action
 const loginSync = user => ({ type: USER_LOGIN, user })
@@ -10,13 +10,13 @@ export const login = (name, password) => {
     return async dispatch => {
         const loginResult = await reqLogin({ name, password })
         const RoleListResult = await reqRoleList()
-        const { data, msg } = loginResult
+        const { data } = loginResult
         if (loginResult.status === 0 && RoleListResult.status === 0) {
             const roleList = RoleListResult.data
             const { roleId } = data
             const role = roleList.filter(item => item.id === roleId * 1)
-            const menus =  role[0].menus.split(',')
-            localStorageUser.setUser({
+            const menus = role[0].menus.split(',')
+            setUser_l({
                 ...data,
                 menus
             })                                          //保存到localStorage
@@ -25,7 +25,7 @@ export const login = (name, password) => {
                 menus
             }))                                         //分发action
         } else {
-            message.error(msg)
+            message.error('账号或密码输入不正确')
         }
     }
 }
@@ -36,8 +36,9 @@ export const tempLogin = () => {
         const time = Date.now()
         const user = {
             name: '游客' + time,
-            menus:['/home','/products','/category','/product','/role','/user','/chart/bar','/chart/line','/chart/pie']
+            menus: ['/home', '/products', '/category', '/product', '/role', '/user', '/chart/bar', '/chart/line', '/chart/pie']
         }
+        setUser_s(user)                                          //保存到localStorage
         dispatch(loginSync(user))
     }
 }
@@ -57,4 +58,4 @@ export const logout = () => {
 export const saveTitle = title => ({ type: SAVE_TITLE, title })
 
 //保存商品信息的同步action
-export const saveProduct = product =>({type:SAVE_PRODUCT, product})
+export const saveProduct = product => ({ type: SAVE_PRODUCT, product })

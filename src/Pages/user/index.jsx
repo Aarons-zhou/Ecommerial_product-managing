@@ -4,7 +4,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { reqRoleList, reqUserList, reqDeleteUser } from '../../api'
 import LinkButton from '../../Components/RenderLinkButton'
 import UserForm from './user-form'
-import { putServerTime } from '../../utils/transferTime'
+import { putServerTime } from '../../utils/formatTime'
 
 const { confirm } = Modal
 export default class User extends Component {
@@ -42,20 +42,22 @@ export default class User extends Component {
 
     //删除确认
     showConfirm = user => {
-        const _this = this
-        const confirmNode = confirm({
-            title: '确定注销用户吗？',
-            icon: <ExclamationCircleOutlined />,
-            content: '注销该用户信息后，将永久不可恢复。',
-            async onOk() {
-                const result = await reqDeleteUser(user.id)
-                if (result === 'success') {
-                    message.success('用户删除成功')
-                    _this.getUserList()
-                } else message.error('用户删除失败，请稍后重试')
-                confirmNode.destroy()
-            },
-        });
+        return () => {
+            const _this = this
+            const confirmNode = confirm({
+                title: '确定注销用户吗？',
+                icon: <ExclamationCircleOutlined />,
+                content: '注销该用户信息后，将永久不可恢复。',
+                async onOk() {
+                    const result = await reqDeleteUser(user.id)
+                    if (result === 'success') {
+                        message.success('用户删除成功')
+                        _this.getUserList()
+                    } else message.error('用户删除失败，请稍后重试')
+                    confirmNode.destroy()
+                },
+            });
+        }
     }
 
     componentDidMount() {
@@ -102,7 +104,7 @@ export default class User extends Component {
                             }}>
                                 修改
                             </LinkButton>
-                            <LinkButton onClick={() => { this.showConfirm(user) }}>删除</LinkButton>
+                            <LinkButton onClick={this.showConfirm(user)}>删除</LinkButton>
                         </span>
                     )
                 }

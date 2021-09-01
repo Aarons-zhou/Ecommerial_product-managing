@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Modal } from 'antd'
 import LinkButton from '../RenderLinkButton'
 import { logout } from '../../redux/actions'
-import { transferTime } from '../../utils/transferTime'
+import { formatTime } from '../../utils/formatTime'
 import { reqIP, reqWeather } from '../../api'
 import './index.less'
 
@@ -17,7 +17,7 @@ class AdminHeader extends Component {
 
     state = {
         isConfirmLogoutVisible: false,
-        time: transferTime(new Date()),
+        time: formatTime(new Date()),
         city: '',
         temperature: '',
         weather: ''
@@ -39,7 +39,7 @@ class AdminHeader extends Component {
     //获取时间到state中
     getTime = () => {
         const dateInstance = new Date()
-        const time = transferTime(dateInstance)
+        const time = formatTime(dateInstance)
         this.setState({ time })
     }
     //获取IP和天气
